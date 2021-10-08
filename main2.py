@@ -24,18 +24,13 @@ def column_to_dictionary(column):
     dictionary = dict(zip(lst, list(range(len(lst)+1))))
     return dictionary
 
-model_dict = column_to_dictionary("model")
-transmission_dict = column_to_dictionary("transmission")
-fueltype_dict = column_to_dictionary("fuelType")
-brand_dict = column_to_dictionary("brand")
-
-inputs = df.drop(['tax(£)', 'price', 'tax', 'engineSize'], axis='columns')
+inputs = df.drop(['tax(£)', 'price', 'tax'], axis='columns')
 target = df.price
 
-inputs = inputs.replace(model_dict)
-inputs = inputs.replace(transmission_dict)
-inputs = inputs.replace(fueltype_dict)
-inputs = inputs.replace(brand_dict)
+inputs = inputs.replace(column_to_dictionary("model"))
+inputs = inputs.replace(column_to_dictionary("transmission"))
+inputs = inputs.replace(column_to_dictionary("fuelType"))
+inputs = inputs.replace(column_to_dictionary("brand"))
 
 lgb_model = lgb.LGBMRegressor(
     boosting_type='gbdt',
@@ -47,4 +42,4 @@ lgb_model = lgb.LGBMRegressor(
 lgb_model.fit(inputs, target)
 lgb_r2 = lgb_model.score(inputs.values, target)
 
-pred = lgb_model.predict([[model, year, ]])
+# pred = lgb_model.predict([[model, year, transmission, mileage, fuelType, mpg, enginesize, brand]])
